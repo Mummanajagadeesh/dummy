@@ -1,55 +1,26 @@
-#define BLYNK_PRINT Serial
+// Initialize Blynk and Sensors
+Initialize Blynk
+Setup PIR Sensor
+Setup Reed Switch
 
-#define BLYNK_TEMPLATE_ID "<id>"
-#define BLYNK_TEMPLATE_NAME "<name>"
-#define BLYNK_AUTH_TOKEN "<token>"
+// Main Loop
+While (true) {
+    // Read PIR Sensor
+    If (PIR Sensor detects movement) {
+        Trigger Alarm
+        Send Alert to Blynk App
+    }
 
-#include <WiFi.h>
-#include <BlynkSimpleEsp32.h>
-#include <DFRobot_mmWave_Radar.h>
+    // Read Reed Switch
+    If (Reed Switch detects door/window opening) {
+        Trigger Alarm
+        Send Alert to Blynk App
+    }
 
+    // Update Blynk App with sensor status
+    Update Blynk App with current sensor status
 
-char ssid[] = "<ssid>";
-char pass[] = "<pass>";
-
-HardwareSerial mySerial(1);  
-DFRobot_mmWave_Radar sensor(&mySerial);
-
-#define alarmPin 7
-
-int val = 0;
-
-BLYNK_WRITE(V2) {
-  if (param.asInt() == 0) { 
-    digitalWrite(alarmPin, LOW); 
-    Serial.println("Alarm OFF."); 
-  } else {
-    digitalWrite(alarmPin, HIGH);  
-    Serial.println("Alarm ON.");  
-  }
+    // Wait for a short period before checking again
+    Wait (1 second)
 }
 
-void setup() {
-  Serial.begin(115200); 
-  mySerial.begin(115200, SERIAL_8N1, 20, 21); 
-  pinMode(alarmPin, OUTPUT);    
-  digitalWrite(alarmPin, LOW);   
-
-  sensor.factoryReset();   
-  sensor.DetRangeCfg(0, 1); 
-
-  Blynk.begin(BLYNK_AUTH_TOKEN, ssid, pass);  
-}
-
-void loop() {
-  Blynk.run();  
-  val = sensor.readPresenceDetection();  
-  digitalWrite(alarmPin, val);  
-  Serial.println(val); 
-
-
-  // Placeholder for additional features and potential addons
-
-  
-                    
-}
