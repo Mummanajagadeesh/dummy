@@ -1,26 +1,27 @@
+#include <BlynkSimpleEsp8266.h>
+#include <ESP8266WiFi.h>
 
-Initialize Blynk
-Setup PIR Sensor
-Setup Reed Switch
+char auth[] = "<token>";
+char ssid[] = "<ssid>";
+char pass[] = "<password>";
 
+int pirPin = D1;  
+int reedPin = D2;  
+bool pirState = false;  
+bool reedState = false;  
 
-While (true) {
-   
-    If (PIR Sensor detects movement) {
-        Trigger Alarm
-        Send Alert to Blynk App
-    }
-
-   
-    If (Reed Switch detects door/window opening) {
-        Trigger Alarm
-        Send Alert to Blynk App
-    }
-
-    
-    Update Blynk App with current sensor status
-
-    
-    Wait (1 second)
+void setup() {
+    Blynk.begin(auth, ssid, pass);
+    pinMode(pirPin, INPUT);
+    pinMode(reedPin, INPUT);
 }
 
+void loop() {
+    pirState = digitalRead(pirPin);
+    reedState = digitalRead(reedPin);
+    if (pirState || reedState) {
+        Blynk.notify("Alert! Motion detected or door/window opened");
+    }
+    Blynk.run();
+    // Placeholder for future features
+}
